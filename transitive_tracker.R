@@ -17,7 +17,7 @@ last_year <- hockeyR::get_game_ids(season = current_season-1) |>
 games <- hockeyR::get_game_ids(season = current_season)
 
 games <- games |>
-  dplyr::filter(date <= Sys.Date()) |>
+  dplyr::filter(date <= Sys.Date() & game_type == "REG") |>
   dplyr::arrange(date)
 
 if(nrow(games) > 0){
@@ -38,11 +38,12 @@ if(nrow(games) > 0){
           opponent_score = home_final_score
         )
     ) |>
+    dplyr::mutate(date = as.Date(date)) |>
     dplyr::arrange(date) |>
     dplyr::mutate(win = ifelse(team_score > opponent_score, 1, 0))
   
   tracker <- dplyr::tibble(
-    date = last_year$date,
+    date = as.Date(last_year$date),
     team = ifelse(
       last_year$home_final_score > last_year$away_final_score,
       last_year$home_name,
@@ -71,13 +72,13 @@ if(nrow(games) > 0){
     last_winner <- dplyr::last(tracker$team)
     
     last_game <- double_games |>
-      dplyr::filter(team == last_winner & win == 0) |>
+      dplyr::filter(team == last_winner & win == 0 & date > dplyr::last(tracker$date)) |>
       dplyr::slice(1)
     
     tracker <- dplyr::bind_rows(
       tracker,
       dplyr::tibble(
-        date = last_game$date,
+        date = as.Date(last_game$date),
         team = last_game$opponent,
         opponent = last_game$team,
         team_score = last_game$opponent_score,
@@ -94,5 +95,5 @@ if(nrow(games) > 0){
     } else {break}
   }
   
-  tracker |> saveRDS("data/trasitive_tracker.rds")
+  tracker |> saveRDS(paste0("data/trasitive_tracker_",current_season-1,"_",substr(current_season,3,4),".rds"))
 }
