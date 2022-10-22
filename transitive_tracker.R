@@ -43,7 +43,7 @@ if(nrow(games) > 0){
     dplyr::mutate(win = ifelse(team_score > opponent_score, 1, 0))
   
   tracker <- dplyr::tibble(
-    date = as.Date(last_year$date),
+    date = as.Date(dplyr::first(games$date)),
     team = ifelse(
       last_year$home_final_score > last_year$away_final_score,
       last_year$home_name,
