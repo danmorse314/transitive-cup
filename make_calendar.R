@@ -3,7 +3,7 @@ library(tidyverse)
 tracker <- readRDS("data/transitive_tracker_2021_22.rds")
 
 tracker <- tracker |>
-  padr::pad(start_val = as.Date("2021-10-01")) |>
+  padr::pad(interval = "day", start_val = as.Date("2021-10-01")) |>
   tidyr::fill(team) |>
   mutate(
     month = factor(months(date),levels = c("October","November","December","January","February","March","April")),
@@ -42,12 +42,17 @@ chart |>
     nudge_x = .5, nudge_y = .5,
     hjust = 1, vjust = 1
     ) +
+  geom_tile(
+    fill = "transparent", color = "lightgray"
+  ) +
   ggimage::geom_image(
     aes(image = team_logo_espn),
-    size = .075, asp = 1.5,
+    size = .08, asp = 1.5,
     image_fun = transparent
   ) +
   facet_wrap(~month, nrow = 3) +
+  #geom_vline(xintercept = seq(0.6,6.6,1), color = "lightgray") +
+  #geom_hline(yintercept = seq(0.4,5.4,1), color = "lightgray") +
   scale_y_reverse() +
   theme_void() +
   theme(
@@ -66,6 +71,7 @@ chart |>
   ) +
   labs(
     title = "The Transitive Stanley Cup",
-    subtitle = "2021-22 NHL Season"
+    subtitle = "2021-22 NHL Season",
+    caption = "What if we gave the Stanely Cup to whichever team beat the last team to win the Stanley Cup?"
   )
 ggsave("figures/transitive_cup_calendar.png", width = 9, height = 6)
