@@ -74,4 +74,4 @@ chart |>
     subtitle = "2021-22 NHL Season",
     caption = "What if we gave the Stanely Cup to whichever team beat the last team to win the Stanley Cup?"
   )
-ggsave("figures/transitive_cup_calendar.png", width = 9, height = 6)
+ggsave(paste0("figures/transitive_cup_calendar_",first(chart$y),"_",substr(last(chart$y),3,4),".png"), width = 9, height = 6)
