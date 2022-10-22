@@ -95,5 +95,5 @@ if(nrow(games) > 0){
     } else {break}
   }
   
-  tracker |> saveRDS(paste0("data/trasitive_tracker_",current_season-1,"_",substr(current_season,3,4),".rds"))
+  tracker |> saveRDS(paste0("data/transitive_tracker_",current_season-1,"_",substr(current_season,3,4),".rds"))
 }
