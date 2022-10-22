@@ -14,7 +14,7 @@ last_year <- hockeyR::get_game_ids(season = current_season-1) |>
   dplyr::arrange(desc(date)) |>
   dplyr::slice(1)
 
-games <- hockeyR::get_game_ids(season = 2023)
+games <- hockeyR::get_game_ids(season = current_season)
 
 games <- games |>
   dplyr::filter(date <= Sys.Date()) |>
